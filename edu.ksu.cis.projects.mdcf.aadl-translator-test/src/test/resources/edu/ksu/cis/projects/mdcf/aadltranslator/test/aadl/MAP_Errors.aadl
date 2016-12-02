@@ -4,7 +4,7 @@ annex EMV2
 {**
 	error types
 	
-	-- We (ab)use the EMV2 type system to modle process variables and their values.
+	-- We (ab)use the EMV2 type system to model process variables and their values.
 	-- These values shouldn't be used as normal errors, and we use this type at the root
 	-- of the hierarchy to enforce that distinction. 
 	ProcessModel : type;

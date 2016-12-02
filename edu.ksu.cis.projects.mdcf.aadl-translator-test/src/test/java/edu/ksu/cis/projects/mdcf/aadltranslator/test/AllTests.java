@@ -23,7 +23,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -87,24 +86,15 @@ import edu.ksu.cis.projects.mdcf.aadltranslator.view.STRendererTests;
 //@InjectWith(typeof(Aadl2UiInjectorProvider)) Look into this, could remove 10s wait time
 @Suite.SuiteClasses({
 		// Architecture Model tests
-		SystemModelTests.class,
-		DeviceModelTests.class,
-		ProcessModelTests.class,
-		TaskModelTests.class,
-		PortModelTests.class,
-		SystemConnectionModelTests.class,
-		ProcessConnectionModelTests.class,
+		SystemModelTests.class, DeviceModelTests.class, ProcessModelTests.class, TaskModelTests.class,
+		PortModelTests.class, SystemConnectionModelTests.class, ProcessConnectionModelTests.class,
 
 		// Hazard Analysis Model tests
 //		ConnectionModelHazardTests.class,
 		HazardPreliminariesTests.class,
 //		HazardBackgroundTests.class,
-		PropagatableErrorTests.class,
-		ExternallyCausedDangerModelTests.class,
-		InternallyCausedDangerModelTests.class,
-		NotDangerousDangerModelTests.class,
-		DetectionAndHandlingTests.class,
-		EliminatedFaultsTests.class,
+		PropagatableErrorTests.class, ExternallyCausedDangerModelTests.class, InternallyCausedDangerModelTests.class,
+		NotDangerousDangerModelTests.class, DetectionAndHandlingTests.class, EliminatedFaultsTests.class,
 
 		// Error-handling tests
 		ControllerErrorTests.class,
@@ -115,15 +105,11 @@ import edu.ksu.cis.projects.mdcf.aadltranslator.view.STRendererTests;
 		DeviceEIAADLSystemErrorTest.class,
 
 		// View tests
-		AppHAReportViewTests.class,
-		AppSuperClassViewTests.class,
-		AppSpecViewTests.class,
-		STRendererTests.class,
+		AppHAReportViewTests.class, AppSuperClassViewTests.class, AppSpecViewTests.class, STRendererTests.class,
 //		AwasTests.class,
 })
 public class AllTests {
-	private static final Logger log = Logger
-			.getLogger(AllTests.class.getName());
+	private static final Logger log = Logger.getLogger(AllTests.class.getName());
 
 	public static HashMap<String, IFile> targetableFiles = new HashMap<>();
 	public static ResourceSet resourceSet = null;
@@ -145,22 +131,16 @@ public class AllTests {
 
 	@BeforeClass
 	public static void initialize() {
-		testProject = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject("TestProject");
+		testProject = ResourcesPlugin.getWorkspace().getRoot().getProject("TestProject");
 		try {
 
-			IHandlerService handlerService = (IHandlerService) PlatformUI
-					.getWorkbench().getService(IHandlerService.class);
-			handlerService
-					.executeCommand(
-							"org.osate.xtext.aadl2.ui.resetpredeclaredproperties",
-							null);
+			IHandlerService handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
+			handlerService.executeCommand("org.osate.xtext.aadl2.ui.resetpredeclaredproperties", null);
 
 			String[] natureIDs = new String[] { "org.osate.core.aadlnature",
 					"org.eclipse.xtext.ui.shared.xtextNature" };
 
-			IProject pluginResources = ResourcesPlugin.getWorkspace().getRoot()
-					.getProject("Plugin_Resources");
+			IProject pluginResources = ResourcesPlugin.getWorkspace().getRoot().getProject("Plugin_Resources");
 
 			IProject[] referencedProjects = new IProject[] { pluginResources };
 			if (!testProject.isAccessible()) {
@@ -191,13 +171,12 @@ public class AllTests {
 
 			initFiles(packagesFolder, propertySetsFolder);
 
-			testProject
-					.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
-		} catch (CoreException | ExecutionException | NotDefinedException
-				| NotEnabledException | NotHandledException e) {
+			testProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
+		} catch (CoreException | ExecutionException | NotDefinedException | NotEnabledException
+				| NotHandledException e) {
 			e.printStackTrace();
 		}
-		
+
 		// This is a total hack because the guice injectors don't finish
 		// running until some time after the build has completed. This 10s wait
 		// allows them to finish, avoiding all sorts of nasty errors
@@ -210,65 +189,49 @@ public class AllTests {
 		initComplete = true;
 	}
 
-	private static void initFiles(IFolder packagesFolder,
-			IFolder propertySetsFolder) {
-		URL aadlDirUrl = Platform.getBundle(TEST_PLUGIN_BUNDLE_ID).getEntry(
-				TEST_DIR + "aadl/");
-		URL aadlPropertysetsDirUrl = Platform.getBundle(TEST_PLUGIN_BUNDLE_ID)
-				.getEntry(TEST_DIR + "aadl/propertyset/");
-		URL aadlSystemDirUrl = Platform.getBundle(TEST_PLUGIN_BUNDLE_ID)
-				.getEntry(TEST_DIR + "aadl/system/");
-		URL aadlDeviceDirUrl = Platform.getBundle(TEST_PLUGIN_BUNDLE_ID)
-				.getEntry(TEST_DIR + "aadl/device/");
+	private static void initFiles(IFolder packagesFolder, IFolder propertySetsFolder) {
+		URL aadlDirUrl = Platform.getBundle(TEST_PLUGIN_BUNDLE_ID).getEntry(TEST_DIR + "aadl/");
+		URL aadlPropertysetsDirUrl = Platform.getBundle(TEST_PLUGIN_BUNDLE_ID).getEntry(TEST_DIR + "aadl/propertyset/");
+		URL aadlSystemDirUrl = Platform.getBundle(TEST_PLUGIN_BUNDLE_ID).getEntry(TEST_DIR + "aadl/system/");
+		URL aadlDeviceDirUrl = Platform.getBundle(TEST_PLUGIN_BUNDLE_ID).getEntry(TEST_DIR + "aadl/device/");
 		File aadlDir = null;
 		File aadlPropertysetsDir = null;
 		File aadlSystemDir = null;
 		File aadlDeviceDir = null;
 		try {
 			aadlDir = new File(FileLocator.toFileURL(aadlDirUrl).toURI());
-			aadlPropertysetsDir = new File(FileLocator.toFileURL(
-					aadlPropertysetsDirUrl).toURI());
+			aadlPropertysetsDir = new File(FileLocator.toFileURL(aadlPropertysetsDirUrl).toURI());
 			aadlSystemDir = new File(FileLocator.toFileURL(aadlSystemDirUrl).toURI());
 			aadlDeviceDir = new File(FileLocator.toFileURL(aadlDeviceDirUrl).toURI());
 		} catch (IOException | URISyntaxException e) {
 			e.printStackTrace();
 		}
 		initFiles(packagesFolder, propertySetsFolder, aadlDir, targetableFiles);
-		initFiles(packagesFolder, propertySetsFolder, aadlSystemDir,
-				targetableFiles);
-		initFiles(packagesFolder, propertySetsFolder, aadlDeviceDir,
-				targetableFiles);
-		initFiles(packagesFolder, propertySetsFolder, aadlPropertysetsDir,
-				targetableFiles);
+		initFiles(packagesFolder, propertySetsFolder, aadlSystemDir, targetableFiles);
+		initFiles(packagesFolder, propertySetsFolder, aadlDeviceDir, targetableFiles);
+		initFiles(packagesFolder, propertySetsFolder, aadlPropertysetsDir, targetableFiles);
 
 		/* Device Equipment Interfaces Related Files */
-		URL aadlDeviceEIPackageDirUrl = Platform.getBundle(
-				TEST_PLUGIN_BUNDLE_ID).getEntry(
-				TEST_DIR + "aadl/device_eis/packages/");
-		URL aadlDeviceEIPropertysetsDirUrl = Platform.getBundle(
-				TEST_PLUGIN_BUNDLE_ID).getEntry(
-				TEST_DIR + "aadl/device_eis/propertysets/");
+		URL aadlDeviceEIPackageDirUrl = Platform.getBundle(TEST_PLUGIN_BUNDLE_ID)
+				.getEntry(TEST_DIR + "aadl/device_eis/packages/");
+		URL aadlDeviceEIPropertysetsDirUrl = Platform.getBundle(TEST_PLUGIN_BUNDLE_ID)
+				.getEntry(TEST_DIR + "aadl/device_eis/propertysets/");
 
 		File aadlDeviceEIPackageDir = null;
 		File aadlDeviceEIPropertysetsDir = null;
 
 		try {
-			aadlDeviceEIPackageDir = new File(FileLocator.toFileURL(
-					aadlDeviceEIPackageDirUrl).getPath());
-			aadlDeviceEIPropertysetsDir = new File(FileLocator.toFileURL(
-					aadlDeviceEIPropertysetsDirUrl).getPath());
+			aadlDeviceEIPackageDir = new File(FileLocator.toFileURL(aadlDeviceEIPackageDirUrl).getPath());
+			aadlDeviceEIPropertysetsDir = new File(FileLocator.toFileURL(aadlDeviceEIPropertysetsDirUrl).getPath());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		initFiles(packagesFolder, propertySetsFolder, aadlDeviceEIPackageDir,
-				targetableFiles);
-		initFiles(packagesFolder, propertySetsFolder,
-				aadlDeviceEIPropertysetsDir, targetableFiles);
+		initFiles(packagesFolder, propertySetsFolder, aadlDeviceEIPackageDir, targetableFiles);
+		initFiles(packagesFolder, propertySetsFolder, aadlDeviceEIPropertysetsDir, targetableFiles);
 	}
 
-	private static void initFiles(IFolder packagesFolder,
-			IFolder propertySetsFolder, File dir,
+	private static void initFiles(IFolder packagesFolder, IFolder propertySetsFolder, File dir,
 			HashMap<String, IFile> fileMap) {
 		String fileName = null;
 		try {
@@ -276,56 +239,47 @@ public class AllTests {
 				if (f.isHidden() || f.isDirectory())
 					continue;
 				fileName = f.getName().substring(0, f.getName().length() - 5);
-				fileMap.put(fileName,
-						packagesFolder.getFile(fileName + ".aadl"));
+				fileMap.put(fileName, packagesFolder.getFile(fileName + ".aadl"));
 				if (!packagesFolder.getFile(fileName + ".aadl").exists()) {
-					fileMap.get(fileName).create(new FileInputStream(f), true,
-							null);
+					fileMap.get(fileName).create(new FileInputStream(f), true, null);
 				}
-				resourceSet.createResource(OsateResourceUtil
-						.getResourceURI((IResource) fileMap.get(fileName)));
+				resourceSet.createResource(OsateResourceUtil.getResourceURI(fileMap.get(fileName)));
 			}
 		} catch (IOException | CoreException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static SystemModel runArchTransTest(final String testName,
-			final String systemName) {
-		IFile inputFile = targetableFiles.get(systemName);		
+	public static SystemModel runArchTransTest(final String testName, final String systemName) {
+		IFile inputFile = targetableFiles.get(systemName);
 		HashSet<IFile> supportingFiles = getSupportingFiles(inputFile);
 		Translator stats = new Translator(new NullProgressMonitor());
 
 		configureTranslator(inputFile, stats);
-		
-		parseErrManager = new ParseErrorReporterManager(
-				parseErrorReporterFactory);
+
+		parseErrManager = new ParseErrorReporterManager(parseErrorReporterFactory);
 
 		stats.setErrorManager(parseErrManager);
 		for (String propSetName : usedProperties) {
 			stats.addPropertySetName(propSetName);
 		}
-		Resource res = resourceSet.getResource(
-				OsateResourceUtil.getResourceURI((IResource) inputFile), true);
+		Resource res = resourceSet.getResource(OsateResourceUtil.getResourceURI(inputFile), true);
 		Element target = (Element) res.getContents().get(0);
-		
+
 		stats.setErrorInfo(getErrorTypes(resourceSet, supportingFiles));
 		stats.process(target);
 		String appName = inputFile.getProject().getName();
 		stats.getSystemModel().setName(appName);
-		for(DevOrProcModel dopm : stats.getSystemModel().getChildren().values()){
+		for (DevOrProcModel dopm : stats.getSystemModel().getChildren().values()) {
 			dopm.setParentName(appName);
 		}
-		errorSB.append(parseErrManager.getReporter((IResource) inputFile)
-				.toString());
-	
+		errorSB.append(parseErrManager.getReporter(inputFile).toString());
+
 		for (IFile supportingFile : supportingFiles) {
-			res = resourceSet.getResource(OsateResourceUtil
-					.getResourceURI((IResource) supportingFile), true);
+			res = resourceSet.getResource(OsateResourceUtil.getResourceURI(supportingFile), true);
 			target = (Element) res.getContents().get(0);
 			stats.process(target);
-			errorSB.append(parseErrManager.getReporter(
-					(IResource) supportingFile).toString());
+			errorSB.append(parseErrManager.getReporter(supportingFile).toString());
 		}
 
 		return stats.getSystemModel();
@@ -341,44 +295,38 @@ public class AllTests {
 		return newSupportingFiles;
 	}
 
-	public static SystemModel runHazardTransTest(final String testName,
-			final String systemName) {
+	public static SystemModel runHazardTransTest(final String testName, final String systemName) {
 		IFile inputFile = targetableFiles.get(systemName);
 		Translator stats = new Translator(new NullProgressMonitor());
-		
+
 		configureTranslator(inputFile, stats);
 
-		parseErrManager = new ParseErrorReporterManager(
-				parseErrorReporterFactory);
+		parseErrManager = new ParseErrorReporterManager(parseErrorReporterFactory);
 
 		stats.setErrorManager(parseErrManager);
 		for (String propSetName : usedProperties) {
 			stats.addPropertySetName(propSetName);
 		}
-		Resource res = resourceSet.getResource(
-				OsateResourceUtil.getResourceURI((IResource) inputFile), true);
+		Resource res = resourceSet.getResource(OsateResourceUtil.getResourceURI(inputFile), true);
 		Element target = (Element) res.getContents().get(0);
 
 		HashSet<IFile> supportingFiles = getSupportingFiles(inputFile);
-		
+
 		stats.setErrorInfo(getErrorTypes(resourceSet, supportingFiles));
-		
+
 		stats.process(target);
 		String appName = inputFile.getProject().getName();
 		stats.getSystemModel().setName(appName);
-		for(DevOrProcModel dopm : stats.getSystemModel().getChildren().values()){
+		for (DevOrProcModel dopm : stats.getSystemModel().getChildren().values()) {
 			dopm.setParentName(appName);
 		}
-		errorSB.append(parseErrManager.getReporter((IResource) inputFile)
-				.toString());
+		errorSB.append(parseErrManager.getReporter(inputFile).toString());
 
 		for (IFile supportingFile : supportingFiles) {
-			res = resourceSet.getResource(OsateResourceUtil
-					.getResourceURI((IResource) supportingFile), true);
+			res = resourceSet.getResource(OsateResourceUtil.getResourceURI(supportingFile), true);
 			target = (Element) res.getContents().get(0);
 			stats.process(target);
-			errorSB.append(parseErrManager.getReporter(
-					(IResource) supportingFile).toString());
+			errorSB.append(parseErrManager.getReporter(supportingFile).toString());
 		}
 
 		return stats.getSystemModel();
@@ -388,32 +336,29 @@ public class AllTests {
 		AadlPackage pack = (AadlPackage) getTargetElement(inputFile);
 		PublicPackageSection sect = pack.getPublicSection();
 		Classifier ownedClassifier = sect.getOwnedClassifiers().get(0);
-		if(ownedClassifier instanceof org.osate.aadl2.System){
-			((Translator)stats).setTarget("System");
-		} else if(ownedClassifier instanceof org.osate.aadl2.Device){
-			((Translator)stats).setTarget("Device");
-		} else if(ownedClassifier instanceof org.osate.aadl2.Process){
-			((Translator)stats).setTarget("Process");
+		if (ownedClassifier instanceof org.osate.aadl2.System) {
+			stats.setTarget("System");
+		} else if (ownedClassifier instanceof org.osate.aadl2.Device) {
+			stats.setTarget("Device");
+		} else if (ownedClassifier instanceof org.osate.aadl2.Process) {
+			stats.setTarget("Process");
 		}
 	}
 
-	public static DeviceComponentModel runDeviceTransTest(
-			final String testName, final String systemName) {
+	public static DeviceComponentModel runDeviceTransTest(final String testName, final String systemName) {
 
 		IFile inputFile = targetableFiles.get(systemName);
 		DeviceTranslator stats = new DeviceTranslator(new NullProgressMonitor());
 
 		log.setUseParentHandlers(false);
 
-		parseErrManager = new ParseErrorReporterManager(
-				parseErrorReporterFactory);
+		parseErrManager = new ParseErrorReporterManager(parseErrorReporterFactory);
 
 		stats.setErrorManager(parseErrManager);
 		for (String propSetName : usedProperties) {
 			stats.addPropertySetName(propSetName);
 		}
-		Resource res = resourceSet.getResource(
-				OsateResourceUtil.getResourceURI((IResource) inputFile), true);
+		Resource res = resourceSet.getResource(OsateResourceUtil.getResourceURI(inputFile), true);
 		Element target = (Element) res.getContents().get(0);
 
 		for (Diagnostic diag : res.getErrors()) {
@@ -426,8 +371,7 @@ public class AllTests {
 
 		stats.process(target);
 
-		errorSB.append(parseErrManager.getReporter((IResource) inputFile)
-				.toString());
+		errorSB.append(parseErrManager.getReporter(inputFile).toString());
 
 		log.log(Level.SEVERE, errorSB.toString());
 		if (errorSB.length() == 0) {
@@ -436,13 +380,12 @@ public class AllTests {
 		return stats.getDeviceComponentModel();
 	}
 
-	public static void runWriterTest(String testName, Object var, String varName,
-			STGroup stg, boolean GENERATE_EXPECTED, String expectedDir) {
+	public static void runWriterTest(String testName, Object var, String varName, STGroup stg,
+			boolean GENERATE_EXPECTED, String expectedDir) {
 		stg.registerRenderer(String.class, MarkdownLinkRenderer.getInstance());
 		URL expectedOutputUrl = Platform.getBundle(TEST_PLUGIN_BUNDLE_ID)
 				.getEntry(TEST_DIR + expectedDir + testName + ".txt");
-		String actualStr = stg.getInstanceOf(testName).add(varName, var)
-				.render();
+		String actualStr = stg.getInstanceOf(testName).add(varName, var).render();
 		String expectedStr = null;
 		try {
 			if (GENERATE_EXPECTED) {
@@ -451,8 +394,7 @@ public class AllTests {
 				fail("Test was run in generate expected mode!");
 			} else {
 				expectedStr = new String(
-						Files.readAllBytes(Paths.get(FileLocator.toFileURL(
-								expectedOutputUrl).toURI())));
+						Files.readAllBytes(Paths.get(FileLocator.toFileURL(expectedOutputUrl).toURI())));
 			}
 		} catch (IOException | URISyntaxException e) {
 			e.printStackTrace();
@@ -463,16 +405,15 @@ public class AllTests {
 
 	private static Element getTargetElement(IFile file) {
 		ResourceSet rs = OsateResourceUtil.createResourceSet();
-		Resource res = rs.getResource(
-				OsateResourceUtil.getResourceURI((IResource) file), true);
+		Resource res = rs.getResource(OsateResourceUtil.getResourceURI(file), true);
 		Element target = (Element) res.getContents().get(0);
 		return target;
 	}
-	
+
 	private static HashSet<NamedElement> getErrorTypes(ResourceSet rs, HashSet<IFile> usedFiles) {
 		HashSet<NamedElement> retSet = new HashSet<>();
 		for (IFile f : usedFiles) {
-			Resource res = rs.getResource(OsateResourceUtil.getResourceURI((IResource) f), true);
+			Resource res = rs.getResource(OsateResourceUtil.getResourceURI(f), true);
 			Element target = (Element) res.getContents().get(0);
 			if ((target instanceof PropertySet)) {
 				continue;
