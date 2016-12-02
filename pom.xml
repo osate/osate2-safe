@@ -3,9 +3,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>edu.ksu.cis.projects.mdcf</groupId>
-	<artifactId>aadl-translator</artifactId>
-	<version>2.0.0-SNAPSHOT</version>
+	<groupId>org.osate.safe</groupId>
+	<artifactId>org.osate.safe.releng</artifactId>
+	<version>2.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -32,10 +32,10 @@
 		</dependency>
 	</dependencies>
 	<modules>
-		<module>edu.ksu.cis.projects.mdcf.aadl-translator-test</module>
-		<module>aadl-translator</module>
-		<module>edu.ksu.cis.projects.mdcf.aadl-feature</module>
-		<module>edu.ksu.cis.projects.mdcf.aadl-updatesite</module>
+		<module>org.osate.safe.translator-test</module>
+		<module>org.osate.safe.translator</module>
+		<module>org.osate.safe.feature</module>
+		<module>org.osate.safe.updatesite</module>
 		<module>mdcf-architect-documentation</module>
 	</modules>
 	<repositories>

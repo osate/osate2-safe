@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.osate.safe.feature_2.0.1.qualifier.jar" id="org.osate.safe.feature" version="2.0.1.qualifier"/>
+</site>
