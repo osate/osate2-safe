@@ -39,7 +39,7 @@ Constraint: type record (
 Fundamentals : record (
 	AccidentLevels : list of MAP_Error_Properties::Accident_Level;
 	Explanations : list of aadlstring;
-) applies to (abstract);
+) applies to (all);
 
 Process_Variable : aadlboolean applies to (data);
 
