@@ -27,19 +27,5 @@ with PulseOx_IncDataPort_Interface, PulseOx_Forwarding_Logic, PulseOx_Forwarding
 		alarm_to_display : port appLogic.DerivedAlarm -> appDisplay.DerivedAlarm;
 	properties
 		MAP_Properties::Component_Type => controller;
-	annex EMV2 {**
-		use types PulseOx_Forwarding_Errors;
-		properties
-		MAP_Error_Properties::Occurrence => [
-			Kind => NotProviding;
-			ViolatedConstraint => PulseOx_Forwarding_Error_Properties::ShowAllAlarms;
-			Title => "Bad SpO2";
-			Cause => [
-				ErrorType => reference(SpO2ValueHigh);
-				Description => "The SpO2 values from the pulse oximeter are too high, so the alarm is missed";
-			];
-			Compensation => "None";
-		] applies to alarm_to_display;
-	**};
 	end PulseOx_Forwarding_System.imp;
 end PulseOx_IncDataPort_System;

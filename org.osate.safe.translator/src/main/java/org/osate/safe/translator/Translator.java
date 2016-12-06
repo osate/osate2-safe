@@ -70,9 +70,9 @@ import org.osate.contribution.sei.names.DataModel;
 import org.osate.safe.translator.exception.CoreException;
 import org.osate.safe.translator.exception.DuplicateElementException;
 import org.osate.safe.translator.exception.MissingRequiredPropertyException;
+import org.osate.safe.translator.exception.NotImplementedException;
 import org.osate.safe.translator.exception.PropertyOutOfRangeException;
 import org.osate.safe.translator.exception.UseBeforeDeclarationException;
-import org.osate.safe.translator.exception.NotImplementedException;
 import org.osate.safe.translator.model.ComponentModel;
 import org.osate.safe.translator.model.DevOrProcModel;
 import org.osate.safe.translator.model.DeviceModel;
@@ -709,6 +709,9 @@ public final class Translator extends AadlProcessingSwitchWithProgress {
 			}
 			componentModel.setFaultClasses(errorTypeSets.get(FAULT_CLASSES_NAME));
 			try {
+				handleFundamentalsProperties(EMV2Properties.getPropertyAssociationListInContext(
+						((((DefaultAnnexSubclause) obj).getParsedAnnexSubclause()))));
+
 				handleErrorFlows(component);
 				handleErrorEvents(component);
 				handleErrorStateTransitions(component);
@@ -717,22 +720,28 @@ public final class Translator extends AadlProcessingSwitchWithProgress {
 				// Exceptions are handled in the handlers for more specific
 				// messages, but we need to stop translation
 				return DONE;
-			}
-			return NOT_DONE;
-		}
-
-		@Override
-		public String caseAbstractSubcomponent(AbstractSubcomponent obj) {
-			try {
-				handleFundamentalsProperties(obj);
-			} catch (NotImplementedException | CoreException | DuplicateElementException e) {
+			} catch (NotImplementedException | DuplicateElementException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return NOT_DONE;
 		}
 
-		private void handleFundamentalsProperties(AbstractSubcomponent obj)
+		@Override
+		public String caseAbstractSubcomponent(AbstractSubcomponent obj) {
+
+			/*-
+			 * Disabled 12/5/16 since it's actually not in the spec to hang EMv2 properties on subcomponents
+			  try {
+				handleFundamentalsProperties(obj);
+			} catch (NotImplementedException | CoreException | DuplicateElementException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
+			return NOT_DONE;
+		}
+
+		private void handleFundamentalsProperties(List<EMV2PropertyAssociation> pas)
 				throws NotImplementedException, CoreException, DuplicateElementException {
 
 			// Initialize counters -- these get set and reset by the loops below
@@ -766,7 +775,7 @@ public final class Translator extends AadlProcessingSwitchWithProgress {
 			// Create the model
 			accidentLevelModel = new AccidentLevelModel();
 			// Parse the common values
-			handleFundamentalsProperty(obj, accidentLevelModel, propTypes, path);
+			handleFundamentalsProperty(pas, accidentLevelModel, propTypes, path);
 
 			while (accidentLevelModel.getName() != null) {
 				// If we're here, we know we have an accident level, so we add
@@ -787,7 +796,7 @@ public final class Translator extends AadlProcessingSwitchWithProgress {
 				// Initializing our model
 				accidentModel = new AccidentModel();
 				// And filling in the known values
-				handleFundamentalsProperty(obj, accidentModel, propTypes, path);
+				handleFundamentalsProperty(pas, accidentModel, propTypes, path);
 				while (accidentModel.getName() != null) {
 					// If we're here, we know we have an accident
 					accidentModel.setParent(accidentLevelModel);
@@ -799,16 +808,14 @@ public final class Translator extends AadlProcessingSwitchWithProgress {
 					propTypes.add(PropertyType.LIST);
 					path.add(String.valueOf(hazardNumber));
 					hazardModel = new HazardModel();
-					handleFundamentalsProperty(obj, hazardModel, propTypes, path);
+					handleFundamentalsProperty(pas, hazardModel, propTypes, path);
 					while (hazardModel.getName() != null) {
 						hazardModel.setParent(accidentModel);
 						propTypes.add(PropertyType.RECORD);
 						path.add("SystemElement");
-						hazardModel.setSystemElement(
-								checkCustomEMV2Property(obj, FUNDAMENTALS_PROP_NAME, propTypes, path));
+						hazardModel.setSystemElement(checkCustomEMV2Property(pas, propTypes, path));
 						path.set(path.size() - 1, "EnvironmentElement");
-						hazardModel.setEnvironmentElement(
-								checkCustomEMV2Property(obj, FUNDAMENTALS_PROP_NAME, propTypes, path));
+						hazardModel.setEnvironmentElement(checkCustomEMV2Property(pas, propTypes, path));
 						path.remove(path.size() - 1);
 						propTypes.remove(propTypes.size() - 1);
 						systemModel.addHazard(hazardModel);
@@ -820,20 +827,19 @@ public final class Translator extends AadlProcessingSwitchWithProgress {
 						propTypes.add(PropertyType.LIST);
 						path.add(String.valueOf(constraintNumber));
 						constraintModel = new ConstraintModel();
-						handleFundamentalsProperty(obj, constraintModel, propTypes, path);
+						handleFundamentalsProperty(pas, constraintModel, propTypes, path);
 						while (constraintModel.getName() != null) {
 							constraintModel.setParent(hazardModel);
 							propTypes.add(PropertyType.RECORD);
 							path.add("ErrorType");
-							constraintModel.setErrorTypeName(
-									checkCustomEMV2Property(obj, FUNDAMENTALS_PROP_NAME, propTypes, path));
+							constraintModel.setErrorTypeName(checkCustomEMV2Property(pas, propTypes, path));
 							path.remove(path.size() - 1);
 							propTypes.remove(propTypes.size() - 1);
 							systemModel.addConstraint(constraintModel);
 
 							path.set(path.size() - 1, String.valueOf(++constraintNumber));
 							constraintModel = new ConstraintModel();
-							handleFundamentalsProperty(obj, constraintModel, propTypes, path);
+							handleFundamentalsProperty(pas, constraintModel, propTypes, path);
 						}
 						constraintNumber = 0;
 						path.remove(path.size() - 1);
@@ -843,7 +849,7 @@ public final class Translator extends AadlProcessingSwitchWithProgress {
 
 						path.set(path.size() - 1, String.valueOf(++hazardNumber));
 						hazardModel = new HazardModel();
-						handleFundamentalsProperty(obj, hazardModel, propTypes, path);
+						handleFundamentalsProperty(pas, hazardModel, propTypes, path);
 					}
 					hazardNumber = 0;
 					path.remove(path.size() - 1);
@@ -853,7 +859,7 @@ public final class Translator extends AadlProcessingSwitchWithProgress {
 
 					path.set(path.size() - 1, String.valueOf(++accidentNumber));
 					accidentModel = new AccidentModel();
-					handleFundamentalsProperty(obj, accidentModel, propTypes, path);
+					handleFundamentalsProperty(pas, accidentModel, propTypes, path);
 				}
 				// By this point, we've parsed all the accidents (and their
 				// children), so we reset the path and propTypes so we can
@@ -866,7 +872,7 @@ public final class Translator extends AadlProcessingSwitchWithProgress {
 
 				path.set(path.size() - 1, String.valueOf(++accidentLevelNumber));
 				accidentLevelModel = new AccidentLevelModel();
-				handleFundamentalsProperty(obj, accidentLevelModel, propTypes, path);
+				handleFundamentalsProperty(pas, accidentLevelModel, propTypes, path);
 			}
 
 			// Last but not least grab the system-level explanations
@@ -875,25 +881,25 @@ public final class Translator extends AadlProcessingSwitchWithProgress {
 			path.set(path.size() - 1, "Explanations");
 			path.add("0");
 			propTypes.add(PropertyType.LIST);
-			String explanation = checkCustomEMV2Property(obj, FUNDAMENTALS_PROP_NAME, propTypes, path);
+			String explanation = checkCustomEMV2Property(pas, propTypes, path);
 			int i = 1;
 			while (explanation != null) {
 				systemModel.addExplanation(explanation);
 				path.set(path.size() - 1, String.valueOf(i));
-				explanation = checkCustomEMV2Property(obj, FUNDAMENTALS_PROP_NAME, propTypes, path);
+				explanation = checkCustomEMV2Property(pas, propTypes, path);
 				i++;
 			}
 		}
 
-		private void handleFundamentalsProperty(AbstractSubcomponent obj, StpaPreliminaryModel prelim,
+		private void handleFundamentalsProperty(List<EMV2PropertyAssociation> pas, StpaPreliminaryModel prelim,
 				List<PropertyType> propTypes, List<String> path) throws NotImplementedException, CoreException {
 
 			propTypes.add(PropertyType.RECORD);
 			path.add("Name");
-			String name = checkCustomEMV2Property(obj, FUNDAMENTALS_PROP_NAME, propTypes, path);
+			String name = checkCustomEMV2Property(pas, propTypes, path);
 
 			path.set(path.size() - 1, "Description");
-			String desc = checkCustomEMV2Property(obj, FUNDAMENTALS_PROP_NAME, propTypes, path);
+			String desc = checkCustomEMV2Property(pas, propTypes, path);
 
 			if (name == null || desc == null) {
 				propTypes.remove(propTypes.size() - 1);
@@ -904,12 +910,12 @@ public final class Translator extends AadlProcessingSwitchWithProgress {
 			path.set(path.size() - 1, "Explanations");
 			path.add("0");
 			propTypes.add(PropertyType.LIST);
-			String explanation = checkCustomEMV2Property(obj, FUNDAMENTALS_PROP_NAME, propTypes, path);
+			String explanation = checkCustomEMV2Property(pas, propTypes, path);
 			int i = 1;
 			while (explanation != null) {
 				prelim.addExplanation(explanation);
 				path.set(path.size() - 1, String.valueOf(i));
-				explanation = checkCustomEMV2Property(obj, FUNDAMENTALS_PROP_NAME, propTypes, path);
+				explanation = checkCustomEMV2Property(pas, propTypes, path);
 				i++;
 			}
 			path.remove(path.size() - 1);
@@ -1269,21 +1275,41 @@ public final class Translator extends AadlProcessingSwitchWithProgress {
 		private String checkCustomEMV2Property(NamedElement elem, String propName, List<PropertyType> propTypes,
 				List<String> path) throws NotImplementedException, CoreException {
 
+			List<EMV2PropertyAssociation> pas = EMV2Properties.getProperty(propName, elem.getContainingClassifier(),
+					elem, null);
+
+			return checkCustomEMV2Property(pas, propTypes, path);
+		}
+
+		private String checkCustomEMV2Property(List<EMV2PropertyAssociation> pas, List<PropertyType> propTypes,
+				List<String> path) throws NotImplementedException, CoreException {
+
 			if (path.size() != propTypes.size()) {
 				throw new CoreException("Path and proptype list sizes don't match!");
 			}
 
-			List<EMV2PropertyAssociation> pas = EMV2Properties.getProperty(propName, elem.getContainingClassifier(),
-					elem, null);
 			if (pas.size() == 0) {
 				return null;
-			} else if (pas.size() > 1) {
-				throw new NotImplementedException(
-						"Mutliple properties are associated with this element, but only one was expected");
 			}
+			/*-
+				 * Disabled Dec 6 2016: This breaks translation since it doesn't differentiate between properties
+				 * that should have multiple copies and those that don't.
+				 * 
+				 * It can / should be re-enabled when the fundamentals property is applied to something, rather
+				 * than just floating. 
+				 *  else if (pas.size() > 1) {
+				throw new NotImplementedException(
+						"Multiple properties are associated with this element, but only one was expected");
+			}
+			*/
 
 			PropertyExpression prex = EMV2Properties.getPropertyValue(pas.get(0));
 
+			return getCustomEMV2PropVal(propTypes, path, prex);
+
+		}
+
+		private String getCustomEMV2PropVal(List<PropertyType> propTypes, List<String> path, PropertyExpression prex) {
 			try {
 				for (int i = 0; i < path.size(); i++) {
 					if (prex == null) {
