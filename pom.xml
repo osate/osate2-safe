@@ -36,7 +36,7 @@
 		<module>org.osate.safe.translator</module>
 		<module>org.osate.safe.feature</module>
 		<module>org.osate.safe.updatesite</module>
-		<module>mdcf-architect-documentation</module>
+		<!--module>mdcf-architect-documentation</module-->
 	</modules>
 	<repositories>
 		<repository>
