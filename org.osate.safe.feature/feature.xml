@@ -4,9 +4,7 @@
       label="SAFE Translator"
       version="2.0.1.qualifier"
       provider-name="CMU-SEI"
-      plugin="org.osate.branding"
-      license-feature="org.osate.plugins.feature"
-      license-feature-version="2.2.2.qualifier">
+      plugin="org.osate.branding">
 
    <description>
       A report generator for AADL that works with annotations for SAFE, which is a derivitive of STPA.
