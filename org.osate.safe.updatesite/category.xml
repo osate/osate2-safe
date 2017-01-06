@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="org.osate.safe.feature">
+      <category name="osate2safe"/>
+   </feature>
+   <category-def name="osate2safe" label="OSATE2 SAFE Translator"/>
+</site>
