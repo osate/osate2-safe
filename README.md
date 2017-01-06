@@ -2,7 +2,7 @@
 This is a plugin for [Osate 2](http://osate.org/) which translates from a selected subset of AADL into code runnable on the [MDCF](http://mdcf.santos.cis.ksu.edu/).  It's developed by Carnegie Mellon University's [Software Engineering Institute](http://sei.cmu.edu/) and is derived from a [previous version](https://github.com/santoslab/aadl-translator) developed at K-State's [SAnToS Lab](http://santoslab.org/). More complete documentation is available at the [project website](http://osate.org/TBD).
 
 # Installing
-The translator is installable into OSATE using its "experimental" [update site](http://aadl.info/aadl/osate/experimental/).
+The translator is installable into OSATE using its "experimental" [update site](http://aadl.info/aadl/osate/experimental/osate2-safe/).
 
 # Building with Maven
 After cloning, the translator can be built by the command "mvn install"  Note that the build process requires [Maven](http://maven.apache.org/) (version 3.0+) and [Java](http://www.java.com/en/) (version 1.8+). If you also wish to build the documentation, you'll need [Pygments](http://pygments.org/) (version 1.3+).
