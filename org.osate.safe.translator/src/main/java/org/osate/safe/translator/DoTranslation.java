@@ -201,8 +201,8 @@ public final class DoTranslation implements IHandler, IRunnableWithProgress {
 	}
 
 	private ResourceSet initProgressMonitor(IProgressMonitor monitor) {
-		OsateResourceUtil.refreshResourceSet();
 		ResourceSet rs = OsateResourceUtil.createResourceSet();
+		OsateResourceUtil.refreshResourceSet(rs);
 		HashSet<IFile> files = TraverseWorkspace.getAadlandInstanceFilesInWorkspace();
 
 		monitor.beginTask("Translating AADL to Java / MIDAS", files.size() + 1);
@@ -214,12 +214,11 @@ public final class DoTranslation implements IHandler, IRunnableWithProgress {
 		HashMap<String, String> elementReports = new HashMap<>();
 
 		IPreferencesService service = Platform.getPreferencesService();
-		String appDevDirectory = service.getString("org.osate.safe.translator",
-				PreferenceConstants.P_APPDEVPATH, null, null);
-		String fmtStr = service.getString("org.osate.safe.translator",
-				PreferenceConstants.P_REPORTFORMAT, null, null);
-		String pandocPath = service.getString("org.osate.safe.translator",
-				PreferenceConstants.P_PANDOCPATH, null, null);
+		String appDevDirectory = service.getString("org.osate.safe.translator", PreferenceConstants.P_APPDEVPATH, null,
+				null);
+		String fmtStr = service.getString("org.osate.safe.translator", PreferenceConstants.P_REPORTFORMAT, null, null);
+		String pandocPath = service.getString("org.osate.safe.translator", PreferenceConstants.P_PANDOCPATH, null,
+				null);
 
 		report_overview.registerRenderer(String.class, MarkdownLinkRenderer.getInstance());
 		report_element.registerRenderer(String.class, MarkdownLinkRenderer.getInstance());
@@ -241,8 +240,9 @@ public final class DoTranslation implements IHandler, IRunnableWithProgress {
 		elementReports.put(sysModel.getName().concat(".awas"), awas);
 
 		try {
-			URI reportHeaderURI = FileLocator.toFileURL(Platform.getBundle("org.osate.safe.translator")
-					.getEntry("src/main/resources/styles/default.html")).toURI();
+			URI reportHeaderURI = FileLocator.toFileURL(
+					Platform.getBundle("org.osate.safe.translator").getEntry("src/main/resources/styles/default.html"))
+					.toURI();
 			WriteOutputFiles.writeHazardReport(overview, appDevDirectory, sysModel.getName(),
 					OutputFormat.valueOf(fmtStr), pandocPath, reportHeaderURI);
 			for (String elemName : elementReports.keySet()) {
@@ -267,10 +267,10 @@ public final class DoTranslation implements IHandler, IRunnableWithProgress {
 		IPreferencesService service = Platform.getPreferencesService();
 
 		// Get user preferences
-		boolean generateShells = service.getBoolean("org.osate.safe.translator",
-				PreferenceConstants.P_USERSHELLS, true, null);
-		String appDevDirectory = service.getString("org.osate.safe.translator",
-				PreferenceConstants.P_APPDEVPATH, null, null);
+		boolean generateShells = service.getBoolean("org.osate.safe.translator", PreferenceConstants.P_USERSHELLS, true,
+				null);
+		String appDevDirectory = service.getString("org.osate.safe.translator", PreferenceConstants.P_APPDEVPATH, null,
+				null);
 
 		// Configure stringtemplate delimeters
 		midas_compsigSTG.delimiterStartChar = '$';
