@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <data-sources>
+        <script-data-source name="SystemModel" id="6">
+            <method name="open"><![CDATA[mySet = new java.util.ArrayList()
+
+mySet.add("One")
+mySet.add("Two")
+mySet.add("Three")
+mySet.add("Four")
+]]></method>
+        </script-data-source>
+    </data-sources>
+    <data-sets>
+        <script-data-set name="AccidentLevels" id="11">
+            <list-property name="resultSetHints">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">TheVal1</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">TheVal1</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">TheVal1</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">SystemModel</property>
+            <method name="open"><![CDATA[iter = mySet.iterator()
+]]></method>
+            <method name="fetch"><![CDATA[
+if (!iter.hasNext()) {
+	return false
+}
+
+row['TheVal1'] = iter.next();
+
+return true
+]]></method>
+        </script-data-set>
+    </data-sets>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <page-footer>
+                <text id="3">
+                    <property name="contentType">html</property>
+                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <list id="7">
+            <property name="dataSet">AccidentLevels</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">TheVal1</property>
+                    <expression name="expression" type="javascript">dataSetRow["TheVal1"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <header>
+                <label id="8">
+                    <text-property name="text">Accident Levels</text-property>
+                </label>
+            </header>
+            <detail>
+                <data id="16">
+                    <property name="resultSetColumn">TheVal1</property>
+                </data>
+            </detail>
+            <footer>
+                <label id="15">
+                    <text-property name="text">~~~</text-property>
+                </label>
+            </footer>
+        </list>
+    </body>
+</report>

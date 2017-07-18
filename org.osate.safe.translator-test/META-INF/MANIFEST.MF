@@ -9,7 +9,9 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.eclipse.ui.workbench,
  org.junit,
  org.eclipse.core.runtime.compatibility;bundle-version="3.2.200",
- org.eclipse.xtext.junit4
+ org.eclipse.xtext.junit4,
+ org.osate.core.tests,
+ com.itemis.xtext.testing
 Bundle-ClassPath: .,
  lib/xstream-1.4.7.jar,
  lib/kxml2-min-2.3.0.jar
