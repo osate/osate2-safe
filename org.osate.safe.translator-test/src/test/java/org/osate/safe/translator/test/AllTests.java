@@ -14,10 +14,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.logging.Logger;
 
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.NotEnabledException;
-import org.eclipse.core.commands.NotHandledException;
-import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -31,8 +27,6 @@ import org.eclipse.core.runtime.Platform;
 //import org.osate.core.test.Aadl2UiInjectorProvider;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
 //import org.eclipse.xtext.junit4.InjectWith;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -79,22 +73,22 @@ import org.stringtemplate.v4.STGroup;
 @RunWith(Suite.class)
 //@InjectWith(typeof(Aadl2UiInjectorProvider)) Look into this, could remove 10s wait time
 @Suite.SuiteClasses({
-		// Architecture Model tests
-		SystemModelTests.class, DeviceModelTests.class, ProcessModelTests.class, TaskModelTests.class,
-		PortModelTests.class, SystemConnectionModelTests.class, ProcessConnectionModelTests.class,
+	// Architecture Model tests
+	SystemModelTests.class, DeviceModelTests.class, ProcessModelTests.class, TaskModelTests.class,
+	PortModelTests.class, SystemConnectionModelTests.class, ProcessConnectionModelTests.class,
 
-		// Hazard Analysis Model tests
+	// Hazard Analysis Model tests
 //		ConnectionModelHazardTests.class,
-		HazardPreliminariesTests.class,
+	HazardPreliminariesTests.class,
 //		HazardBackgroundTests.class,
-		PropagatableErrorTests.class, ExternallyCausedDangerModelTests.class, InternallyCausedDangerModelTests.class,
-		NotDangerousDangerModelTests.class, DetectionAndHandlingTests.class, EliminatedFaultsTests.class,
+	PropagatableErrorTests.class, ExternallyCausedDangerModelTests.class, InternallyCausedDangerModelTests.class,
+	NotDangerousDangerModelTests.class, DetectionAndHandlingTests.class, EliminatedFaultsTests.class,
 
-		// Error-handling tests
-		ControllerErrorTests.class,
+	// Error-handling tests
+	ControllerErrorTests.class,
 
-		// View tests
-		AppHAReportViewTests.class, AppSuperClassViewTests.class, AppSpecViewTests.class, STRendererTests.class,
+	// View tests
+	AppHAReportViewTests.class, AppSuperClassViewTests.class, AppSpecViewTests.class, STRendererTests.class,
 //		AwasTests.class,
 })
 public class AllTests {
@@ -123,27 +117,27 @@ public class AllTests {
 		testProject = ResourcesPlugin.getWorkspace().getRoot().getProject("TestProject");
 		try {
 
-			IHandlerService handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
-			handlerService.executeCommand("org.osate.xtext.aadl2.ui.resetpredeclaredproperties", null);
+//			IHandlerService handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
+//			handlerService.executeCommand("org.osate.xtext.aadl2.ui.resetpredeclaredproperties", null);
 
 			String[] natureIDs = new String[] { "org.osate.core.aadlnature",
-					"org.eclipse.xtext.ui.shared.xtextNature" };
+			"org.eclipse.xtext.ui.shared.xtextNature" };
 
-			IProject pluginResources = ResourcesPlugin.getWorkspace().getRoot().getProject("Plugin_Resources");
-
-			IProject[] referencedProjects = new IProject[] { pluginResources };
+///			IProject pluginResources = ResourcesPlugin.getWorkspace().getRoot().getProject("Plugin_Resources");
+///
+///			IProject[] referencedProjects = new IProject[] { pluginResources };
 			if (!testProject.isAccessible()) {
 				testProject.create(null);
 				testProject.open(null);
 			}
 
-			IProjectDescription prpd = pluginResources.getDescription();
-			prpd.setNatureIds(natureIDs);
-			pluginResources.setDescription(prpd, null);
+//			IProjectDescription prpd = pluginResources.getDescription();
+//			prpd.setNatureIds(natureIDs);
+//			pluginResources.setDescription(prpd, null);
 
 			IProjectDescription testpd = testProject.getDescription();
 			testpd.setNatureIds(natureIDs);
-			testpd.setReferencedProjects(referencedProjects);
+///			testpd.setReferencedProjects(referencedProjects);
 			testProject.setDescription(testpd, null);
 
 			IFolder packagesFolder = testProject.getFolder("packages");
@@ -161,8 +155,7 @@ public class AllTests {
 			initFiles(packagesFolder, propertySetsFolder);
 
 			testProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
-		} catch (CoreException | ExecutionException | NotDefinedException | NotEnabledException
-				| NotHandledException e) {
+		} catch (CoreException e) {
 			e.printStackTrace();
 		}
 
@@ -206,8 +199,9 @@ public class AllTests {
 		String fileName = null;
 		try {
 			for (File f : dir.listFiles()) {
-				if (f.isHidden() || f.isDirectory())
+				if (f.isHidden() || f.isDirectory()) {
 					continue;
+				}
 				fileName = f.getName().substring(0, f.getName().length() - 5);
 				fileMap.put(fileName, packagesFolder.getFile(fileName + ".aadl"));
 				if (!packagesFolder.getFile(fileName + ".aadl").exists()) {
@@ -246,6 +240,9 @@ public class AllTests {
 		errorSB.append(parseErrManager.getReporter(inputFile).toString());
 
 		for (IFile supportingFile : supportingFiles) {
+			if (supportingFile.getFullPath().segment(0).startsWith("org.osate.")) {
+				continue;
+			}
 			res = resourceSet.getResource(OsateResourceUtil.getResourceURI(supportingFile), true);
 			target = (Element) res.getContents().get(0);
 			stats.process(target);
@@ -293,6 +290,9 @@ public class AllTests {
 		errorSB.append(parseErrManager.getReporter(inputFile).toString());
 
 		for (IFile supportingFile : supportingFiles) {
+			if (supportingFile.getFullPath().segment(0).startsWith("org.osate.")) {
+				continue;
+			}
 			res = resourceSet.getResource(OsateResourceUtil.getResourceURI(supportingFile), true);
 			target = (Element) res.getContents().get(0);
 			stats.process(target);
@@ -348,6 +348,9 @@ public class AllTests {
 	private static HashSet<NamedElement> getErrorTypes(ResourceSet rs, HashSet<IFile> usedFiles) {
 		HashSet<NamedElement> retSet = new HashSet<>();
 		for (IFile f : usedFiles) {
+			if (f.getFullPath().segment(0).startsWith("org.osate.")) {
+				continue;
+			}
 			Resource res = rs.getResource(OsateResourceUtil.getResourceURI(f), true);
 			Element target = (Element) res.getContents().get(0);
 			if ((target instanceof PropertySet)) {
