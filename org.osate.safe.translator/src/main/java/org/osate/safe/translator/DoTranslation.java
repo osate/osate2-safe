@@ -13,7 +13,6 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -103,7 +102,7 @@ public final class DoTranslation implements IHandler, IRunnableWithProgress {
 	/**
 	 * This checks to see if the intended translation target is valid, ie, a
 	 * device, process, or system.
-	 * 
+	 *
 	 * @param target
 	 *            The AADL element that was selected
 	 * @return True if the target is valid for translation, false otherwise
@@ -334,8 +333,7 @@ public final class DoTranslation implements IHandler, IRunnableWithProgress {
 		Resource res = rs.getResource(OsateResourceUtil.getResourceURI(currentFile), true);
 
 		// Delete any existing error markers in the system file
-		IResource file = OsateResourceUtil.convertToIResource(res);
-		ParseErrorReporter errReporter = parseErrManager.getReporter(file);
+		ParseErrorReporter errReporter = parseErrManager.getReporter(res);
 		((MarkerParseErrorReporter) errReporter).setContextResource(res);
 		errReporter.deleteMessages();
 
@@ -364,8 +362,9 @@ public final class DoTranslation implements IHandler, IRunnableWithProgress {
 			Element target = (Element) res.getContents().get(0);
 			if ((target instanceof PropertySet)) {
 				String propertySetName = ((PropertySet) target).getName();
-				if (!AadlUtil.getPredeclaredPropertySetNames().contains(propertySetName))
+				if (!AadlUtil.getPredeclaredPropertySetNames().contains(propertySetName)) {
 					stats.addPropertySetName(propertySetName);
+				}
 				continue;
 			}
 			// AadlPackage pack = (AadlPackage) target;

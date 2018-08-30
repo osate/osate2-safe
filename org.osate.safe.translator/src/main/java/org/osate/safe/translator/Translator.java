@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
@@ -63,7 +62,6 @@ import org.osate.aadl2.modelsupport.errorreporting.MarkerParseErrorReporter;
 import org.osate.aadl2.modelsupport.errorreporting.ParseErrorReporter;
 import org.osate.aadl2.modelsupport.errorreporting.ParseErrorReporterManager;
 import org.osate.aadl2.modelsupport.modeltraversal.AadlProcessingSwitchWithProgress;
-import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.aadl2.properties.PropertyNotPresentException;
 import org.osate.aadl2.util.Aadl2Switch;
 import org.osate.contribution.sei.names.DataModel;
@@ -605,8 +603,7 @@ public final class Translator extends AadlProcessingSwitchWithProgress {
 
 		private void handleException(Element obj, Exception e) {
 			INode node = NodeModelUtils.findActualNodeFor(obj);
-			IResource file = OsateResourceUtil.convertToIResource(obj.eResource());
-			ParseErrorReporter errReporter = errorManager.getReporter(file);
+			ParseErrorReporter errReporter = errorManager.getReporter(obj.eResource());
 			if (errReporter instanceof MarkerParseErrorReporter) {
 				((MarkerParseErrorReporter) errReporter).setContextResource(obj.eResource());
 			}

@@ -237,7 +237,7 @@ public class AllTests {
 		for (DevOrProcModel dopm : stats.getSystemModel().getChildren().values()) {
 			dopm.setParentName(appName);
 		}
-		errorSB.append(parseErrManager.getReporter(inputFile).toString());
+		errorSB.append(parseErrManager.getReporter(res).toString());
 
 		for (IFile supportingFile : supportingFiles) {
 			if (supportingFile.getFullPath().segment(0).startsWith("org.osate.")) {
@@ -246,7 +246,7 @@ public class AllTests {
 			res = resourceSet.getResource(OsateResourceUtil.getResourceURI(supportingFile), true);
 			target = (Element) res.getContents().get(0);
 			stats.process(target);
-			errorSB.append(parseErrManager.getReporter(supportingFile).toString());
+			errorSB.append(parseErrManager.getReporter(res).toString());
 		}
 
 		return stats.getSystemModel();
@@ -287,7 +287,7 @@ public class AllTests {
 		for (DevOrProcModel dopm : stats.getSystemModel().getChildren().values()) {
 			dopm.setParentName(appName);
 		}
-		errorSB.append(parseErrManager.getReporter(inputFile).toString());
+		errorSB.append(parseErrManager.getReporter(res).toString());
 
 		for (IFile supportingFile : supportingFiles) {
 			if (supportingFile.getFullPath().segment(0).startsWith("org.osate.")) {
@@ -296,7 +296,7 @@ public class AllTests {
 			res = resourceSet.getResource(OsateResourceUtil.getResourceURI(supportingFile), true);
 			target = (Element) res.getContents().get(0);
 			stats.process(target);
-			errorSB.append(parseErrManager.getReporter(supportingFile).toString());
+			errorSB.append(parseErrManager.getReporter(res).toString());
 		}
 
 		return stats.getSystemModel();
