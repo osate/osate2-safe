@@ -68,13 +68,6 @@
                   style="push">
             </command>
             <command
-                  commandId="org.osate.safe.translator.device-aadl-translate"
-                  icon="src/main/resources/icons/report_go.png"
-                  label="Translate Device"
-                  mnemonic="&amp;d"
-                  style="push">
-            </command>
-            <command
                   commandId="org.osate.safe.translator.translate-hazards"
                   icon="src/main/resources/icons/cog_error.png"
                   label="Translate Hazards"

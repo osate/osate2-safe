@@ -31,6 +31,7 @@ Require-Bundle: org.osate.aadl2,
  org.osate.aadl2.errormodel.analysis;bundle-version="1.0.0",
  org.osate.xtext.aadl2.errormodel.ui;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: org.apache.commons.lang
+Automatic-Module-Name: org.osate.safe.translator
 

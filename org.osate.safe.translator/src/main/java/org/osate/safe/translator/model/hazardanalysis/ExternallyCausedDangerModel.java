@@ -1,7 +1,5 @@
 package org.osate.safe.translator.model.hazardanalysis;
 
-import java.util.Set;
-
 import org.osate.safe.translator.exception.CoreException;
 
 /**

@@ -1,20 +1,16 @@
 package org.osate.safe.translator.test.hazard;
 
-import static org.osate.safe.translator.test.AllTests.initComplete;
-import static org.osate.safe.translator.test.AllTests.usedProperties;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.osate.safe.translator.test.AllTests.initComplete;
+import static org.osate.safe.translator.test.AllTests.usedProperties;
 
 import java.util.Map;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import org.osate.safe.translator.model.ModelUtil.DesignTimeFaultDetectionApproach;
-import org.osate.safe.translator.model.ModelUtil.RuntimeErrorHandlingApproach;
-import org.osate.safe.translator.model.ModelUtil.RuntimeFaultHandlingApproach;
 import org.osate.safe.translator.model.ProcessModel;
 import org.osate.safe.translator.model.SystemModel;
 import org.osate.safe.translator.model.hazardanalysis.InternallyCausedDangerModel;
@@ -26,8 +22,9 @@ public class InternallyCausedDangerModelTests {
 
 	@BeforeClass
 	public static void initialize() {
-		if (!initComplete)
+		if (!initComplete) {
 			AllTests.initialize();
+		}
 		usedProperties.add("MAP_Properties");
 		usedProperties.add("PulseOx_Forwarding_Properties");
 		usedProperties.add("PulseOx_Forwarding_Error_Properties");

@@ -165,8 +165,6 @@ public final class Translator extends AadlProcessingSwitchWithProgress {
 
 	public class TranslatorSwitch extends Aadl2Switch<String> {
 
-		private static final String FUNDAMENTALS_PROP_NAME = "MAP_Error_Properties::Fundamentals";
-
 		/**
 		 * A reference to the "current" component model, stored for convenience
 		 */

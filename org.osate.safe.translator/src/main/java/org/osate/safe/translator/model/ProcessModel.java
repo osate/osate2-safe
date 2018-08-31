@@ -1,10 +1,8 @@
 package org.osate.safe.translator.model;
 
 import java.util.HashMap;
-import java.util.Set;
 
 import org.osate.safe.translator.exception.DuplicateElementException;
-import org.osate.safe.translator.model.ModelUtil.ComponentType;
 import org.osate.safe.translator.model.ModelUtil.ProcessType;
 
 public class ProcessModel extends DevOrProcModel{
@@ -42,10 +40,6 @@ public class ProcessModel extends DevOrProcModel{
 		}
 	}
 
-	public TaskModel getLastThread(){
-		return (TaskModel) children.get(children.size() - 1);
-	}
-	
 	public void addGlobal(String name, String type) {
 		globals.put(name, type);
 	}
@@ -59,14 +53,16 @@ public class ProcessModel extends DevOrProcModel{
 	}
 	
 	public void addParameterToMethod(String methodName, String parameterName, String parameterType) throws DuplicateElementException{
-		if(!methods.containsKey(methodName))
+		if(!methods.containsKey(methodName)) {
 			methods.put(methodName, new MethodModel(methodName));
+		}
 		methods.get(methodName).addParameter(parameterName, parameterType);
 	}
 
 	public void addReturnToMethod(String methodName, String returnType) {
-		if(!methods.containsKey(methodName))
+		if(!methods.containsKey(methodName)) {
 			methods.put(methodName, new MethodModel(methodName));
+		}
 		methods.get(methodName).setRetType(returnType);
 	}
 }

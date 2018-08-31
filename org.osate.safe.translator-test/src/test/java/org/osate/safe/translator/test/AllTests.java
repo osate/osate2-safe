@@ -12,7 +12,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -92,8 +91,6 @@ import org.stringtemplate.v4.STGroup;
 //		AwasTests.class,
 })
 public class AllTests {
-	private static final Logger log = Logger.getLogger(AllTests.class.getName());
-
 	public static HashMap<String, IFile> targetableFiles = new HashMap<>();
 	public static ResourceSet resourceSet = null;
 
